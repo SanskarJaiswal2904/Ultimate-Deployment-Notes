@@ -1,0 +1,86 @@
+First, If you want to deploy full stack app you need to deploy it 2 times,
+1. For backend
+2. For frontend
+
+Now, You can use Render for both frontend and backend
+Whereas, you can use Render for backend and Vercel for frontend
+You cannot deploy backend in Vercel.
+
+First Upload Backend then upload frontend.
+If your frontend has multiple pages then use vercel.json to redirect request to either frontend or backend respectively.
+
+I am using Render for backend and Vercel for frontend, but you can use Render for both frontend and backend (Just you need to make 2 separate deployments)
+
+
+Deploying Backend:
+Make sure your backend is present at the root (not inside any other folder). -> It will just make process easy
+You will have a .env file, you can or cannot make .env.production file (Up to you no difference as such)
+
+Create a Web service normally
+This shall be your build and start command
+
+Build Command : $ npm install
+Start Command : $ node server.js && npm start
+
+You don't need to change environment variables over here
+Upload your .env as it is to the render environment variables
+
+Here you will get your backend link : eg : https://x.onrender.com
+
+
+Deploying Frontend:
+Use Vercel 
+Connect to GitHub
+Just make slight change in environment variable of GitHub, ie, 
+eg :
+PORT=5000
+API_URL=http://localhost:5000/api/v1
+REACT_APP_API_URL=http://localhost:5000/api/v1
+YOUTUBE_API_KEY=AIzaSyDz3Ph85O7C2xha49fD_VjM3UI-6JZWQ-g
+
+The above will convert to : 
+PORT=5000
+API_URL=https://x.onrender.com/api/v1
+REACT_APP_API_URL=https://x.onrender.com/api/v1
+YOUTUBE_API_KEY=AIzaSyDz3Ph85O7C2xha49fD_VjM3UI-6JZWQ-g
+
+In short the localhost will be converted to the backend you are using on your render. (in my case, my backend i running on 'https://x.onrender.com')
+Here you will get your frontend link : eg : https://y.vercel.app
+
+
+
+
+
+
+
+
+
+
+After deploying both frontend and backend you need to update your CORS policy (so that the backend will accept request from frotend), and you need to commit the changes to GitHub:
+ 
+If your backend is in node.js:
+
+// Define the allowed origins
+const allowedOrigins = [
+  'http://localhost:5001', 
+  'https://y.vercel.app'
+];
+
+// Configure CORS middleware
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true); // Allow the request
+    } else {
+      callback(new Error('Not allowed by CORS')); // Block the request
+    }
+  },
+  credentials: true, // Optional: If your frontend uses cookies or Authorization headers
+}));
+
+
+
+If your backend is in flask:
+
+CORS(app, resources={r"/*": {"origins": ["https://y.vercel.app", "http://localhost:5001"]}})
+
