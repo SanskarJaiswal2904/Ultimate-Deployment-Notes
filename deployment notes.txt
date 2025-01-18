@@ -13,7 +13,7 @@ I am using Render for backend and Vercel for frontend, but you can use Render fo
 
 
 Deploying Backend:
-Make sure your backend is present at the root (not inside any other folder). -> It will just make process easy
+Make sure your backend is present at the root (not inside any other folder). -> It will just make process easier.
 You will have a .env file, you can or cannot make .env.production file (Up to you no difference as such)
 
 Create a Web service normally
@@ -83,4 +83,10 @@ app.use(cors({
 If your backend is in flask:
 
 CORS(app, resources={r"/*": {"origins": ["https://y.vercel.app", "http://localhost:5001"]}})
+
+Last, what can happen is MongoDB also has restrictions to which url and access the database,
+to resolve this go to the cluster in security find Network access and write -> 0.0.0.0/0
+it will allow access to all url, which means, any url can access your database
+It is good for development purposes but make sure to correct it in deployment as it is a security breach.
+
 
